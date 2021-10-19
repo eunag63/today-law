@@ -19,7 +19,8 @@ bp = Blueprint("kakao_login", __name__, url_prefix='/')
 
 kakao_client_key = os.environ['KAKAO_REST_API']
 jwt_secret = os.environ['JWT_SECRET']
-redirect_uri = "http://pythonapp-env.eba-pxmvppwj.ap-northeast-2.elasticbeanstalk.com/oauth/kakao/callback"
+#redirect_uri = "http://pythonapp-env.eba-pxmvppwj.ap-northeast-2.elasticbeanstalk.com/oauth/kakao/callback"
+redirect_uri = "http://localhost:5000/oauth/kakao/callback"
 
 # 사용자가 카카오 로그인 요청시 카카오 로그인 페이지로 이동
 # 사용자가 카카오에 인증 성공시 지정한 Redirect_URI로 Access_token을 요청할 수 있는 인증토큰(Authentication_code)를 응답받는다.
@@ -53,11 +54,11 @@ def access():
                 "username":kakao_account['email'],
                 "name":kakao_account['profile']['nickname'],
                 "profile_image":kakao_account['profile']['profile_image_url'],
-                "like_laws":[],
-                "hate_laws":[],
-                "bookmarks":[],
+                "like_laws": [],
+                "hate_laws": [],
+                "bookmarks": [],
                 "comments": [],
-                "bio":"",
+                "bio": " ",
                 "receive_mail": False
             }
 
@@ -97,7 +98,15 @@ def login_check():
         exp = payload['exp']
 
         user = db.users.find_one({'user_id':payload['user_id']}, {'_id':False})
-        return jsonify({'result': 'success', 'name': user['name'],'profile_image': user['profile_image'],'email': user['username'],'bio': user['bio'],'receive_mail':user['receive_mail']} )
+        return jsonify(
+            {'result': 'success',
+             'name': user['name'],
+             'profile_image': user['profile_image'],
+             'email': user['username'],
+             'bio': user['bio'],
+             'receive_mail':user['receive_mail']
+             }
+        )
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect('/')
 
