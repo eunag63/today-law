@@ -167,32 +167,37 @@ $(document).ready(function () {
                 url: `/mypage/wishlist`,
                 success: function (res) {
                     $("#mypage-contents").empty();
-                    let category = res['category_give']
-                    let title = res['title_give']
-                    let time = res['time_give']
-                    let contents = res['contents_give']
-                    let agree = res['agree_give']
-                    temp_html = `<div class="wishlist">
-                                  <table class="table is-responsive">
-                                    <thead>
-                                      <tr>
-                                        <th>카테고리</th>
-                                        <th>제목</th>
-                                        <th>작성일</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <td>${category}</td>
-                                        <td onclick="open_modal_wish('${title}','${category}','${time}','${agree}', '${contents}')"><a>${title}</a></td>
-                                        <td>${time}</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>`
-                    $('#mypage-contents').append(temp_html)
+                    $("#mypage-contents").append(`<div class="wishlist">
+                                      <table class="table is-responsive">
+                                        <thead>
+                                          <tr>
+                                            <th>카테고리</th>
+                                            <th>제목</th>
+                                            <th>작성일</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody id="wishList-body">
 
+                                        </tbody>
+                                      </table>
+                                    </div>`)
+                    for (let i=0;i<res.length;i++) {
+                        console.log(res[i])
+                        let category = res[i]['category_give']
+                        let title = res[i]['title_give']
+                        let time = res[i]['time_give']
+                        let contents = res[i]['contents_give']
+                        let agree = res[i]['agree_give']
+                        temp_html = `<tr>
+                                        <td>${category}</td>
+                                        <td onClick="open_modal_wish('${title}','${category}','${time}','${agree}', '${contents}')">
+                                            <a>${title}</a></td>
+                                        <td>${time}</td>
+                                    </tr>`
+                        $('#wishList-body').append(temp_html)
+                    }
                 }
+
             })
         } else if ($(this).text().includes('좋아요')) {
             $.ajax({
